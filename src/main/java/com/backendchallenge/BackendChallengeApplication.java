@@ -7,6 +7,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class BackendChallengeApplication {
 
 	public static void main(String[] args) {
+		System.setProperty("javax.net.ssl.trustStore", "NUL");
+		System.setProperty("javax.net.ssl.trustStoreType", "Windows-ROOT");
 		SpringApplication.run(BackendChallengeApplication.class, args);
 	}
 

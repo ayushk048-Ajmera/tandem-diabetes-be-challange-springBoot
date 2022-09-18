@@ -23,6 +23,8 @@ import java.util.List;
 @RequestMapping("/api/users")
 @Slf4j
 public class UsersController {
+	private static final String EMAIL_IS_NOT_VALID_ERROR = "Email is not valid!";
+	private static final String USER_NOT_FOUND_ERROR = "User not found";
 
 	@Autowired
 	IUserService userService;
@@ -41,14 +43,18 @@ public class UsersController {
 	public ResponseEntity getUsers(@RequestParam(required = false) String email) {
 		log.info("Getting user information for ");
 
-		if (org.apache.commons.lang3.StringUtils.isEmpty(email)) {
+		if (!StringUtils.isNoneBlank(email)) {
 			List<UserResponseDTO> users = userService.getUsers();
 			return ResponseEntity.ok(users);
 		} else {
+			if (!StringUtils.isValidEmail(email)) {
+				throw new ResponseStatusException(
+						HttpStatus.BAD_REQUEST, EMAIL_IS_NOT_VALID_ERROR);
+			}
 			UserResponseDTO user = userService.getUser(email);
 			if (user == null) {
 				throw new ResponseStatusException(
-						HttpStatus.NOT_FOUND, "User not found");
+						HttpStatus.NOT_FOUND, USER_NOT_FOUND_ERROR);
 			}
 			return ResponseEntity.ok(user);
 		}

@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface IUserService {
 	UserResponseDTO createUser(UserRequestDTO userRequestDTO) throws Exception;
+
 	UserResponseDTO getUser(String emailAddress);
+
 	List<UserResponseDTO> getUsers();
 }

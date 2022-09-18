@@ -19,7 +19,6 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.validation.Valid;
 import java.util.List;
 
-@Valid
 @RestController
 @RequestMapping("/api/users")
 @Slf4j

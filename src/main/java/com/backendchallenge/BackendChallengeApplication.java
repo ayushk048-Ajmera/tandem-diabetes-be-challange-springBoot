@@ -11,5 +11,4 @@ public class BackendChallengeApplication {
 		System.setProperty("javax.net.ssl.trustStoreType", "Windows-ROOT");
 		SpringApplication.run(BackendChallengeApplication.class, args);
 	}
-
 }

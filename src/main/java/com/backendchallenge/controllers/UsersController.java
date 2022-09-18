@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,6 +29,7 @@ public class UsersController {
 
 	@Autowired
 	IUserService userService;
+
 
 	@PostMapping
 	public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO user) throws Exception {
@@ -43,7 +45,7 @@ public class UsersController {
 	public ResponseEntity<List<UserResponseDTO>> getUsers(@RequestParam(required = false) String email) {
 		log.info("Getting user information for ");
 
-		if (org.apache.commons.lang3.StringUtils.isEmpty(email)) {
+		if(org.apache.commons.lang3.StringUtils.isEmpty(email)) {
 			HttpHeaders responseHeaders = new HttpHeaders();
 			responseHeaders.add("ContentType", "application/json");
 			List<UserResponseDTO> users = userService.getUsers();

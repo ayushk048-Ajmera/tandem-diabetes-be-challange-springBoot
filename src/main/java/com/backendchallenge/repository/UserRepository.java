@@ -13,4 +13,6 @@ public interface UserRepository extends CosmosRepository<UserEntity, String> {
     // Query for all documents
     @Query(value = "SELECT * FROM c")
     List<UserEntity> getAllUsers();
+
+    UserEntity findByEmailAddress(String email);
 }

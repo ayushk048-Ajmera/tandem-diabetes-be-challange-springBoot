@@ -5,8 +5,8 @@ spring:
     config: false
     azure:
       cosmos:
-        database: user-collaction1
-        endpoint: https://localhost:8081
+        database: Users
+        endpoint: https://tandem-challenge-heena.documents.azure.com:443/
         populate-query-metrics: true
-        key: C2y6yDjf5/R+ob0N8A7Cgv30VRDJIWEHLM+4QDU5DE2nQ9nDuVTqobD4b8mGGyPMbIZnqyMsEcaGQy67XIw/Jw==
+        key: uSKk0NM9M6KllEuuJdeRbDhZjfwkw0yY4iwsNv9WCX2RRs25Rgi4vNIKZNoRVGG52tUgZgu9i6WWlJvtOiVhqw==
         containerName: AyushTandemUsersSpringBoot

@@ -39,7 +39,7 @@ public class UserServiceImpl implements IUserService {
     public UserResponseDTO getUser(String emailAddress) {
         log.info("Getting user information for {}", StringUtils.obfuscateEmailAddress(emailAddress));
 
-        UserEntity responseEntity = userRepository.findById(emailAddress).orElse(null);
+        UserEntity responseEntity = userRepository.findByEmailAddress(emailAddress);
 
         log.info("Got user information for {}", StringUtils.obfuscateEmailAddress(emailAddress));
         return responseEntity == null ? null : UserMapper.MAPPER.toResponseDTO(responseEntity);

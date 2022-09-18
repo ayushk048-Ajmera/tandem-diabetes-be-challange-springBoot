@@ -1,4 +1,4 @@
-package com.backendchallenge;
+package com.backendchallenge.health;
 
 import com.backendchallenge.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

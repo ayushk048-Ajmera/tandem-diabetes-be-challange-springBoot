@@ -1,5 +1,6 @@
 package com.backendchallenge.controllers;
 
+import com.backendchallenge.customException.AlreadyExistsException;
 import com.backendchallenge.dtos.UserRequestDTO;
 import com.backendchallenge.dtos.UserResponseDTO;
 import com.backendchallenge.services.IUserService;
@@ -24,7 +25,7 @@ import java.util.List;
 @Slf4j
 public class UsersController {
 	private static final String EMAIL_IS_NOT_VALID_ERROR = "Email is not valid!";
-	private static final String USER_NOT_FOUND_ERROR = "User not found";
+	private static  final String  USER_NOT_FOUND_ERROR = "User not found";
 
 	@Autowired
 	IUserService userService;
@@ -33,10 +34,16 @@ public class UsersController {
 	public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO user) throws Exception {
 		log.info("Creating user for {}", StringUtils.obfuscateEmailAddress(user.getEmailAddress()));
 
-		UserResponseDTO response = userService.createUser(user);
+		try {
+			UserResponseDTO response = userService.createUser(user);
 
-		log.info("Created user for {}", StringUtils.obfuscateEmailAddress(user.getEmailAddress()));
-		return ResponseEntity.ok(response);
+			log.info("Created user for {}", StringUtils.obfuscateEmailAddress(user.getEmailAddress()));
+
+			return ResponseEntity.ok(response);
+		} catch (AlreadyExistsException ex) {
+			throw new ResponseStatusException(
+					HttpStatus.CONFLICT, ex.getMessage());
+		}
 	}
 
 	@GetMapping
@@ -47,7 +54,7 @@ public class UsersController {
 			List<UserResponseDTO> users = userService.getUsers();
 			return ResponseEntity.ok(users);
 		} else {
-			if (!StringUtils.isValidEmail(email)) {
+			if(!StringUtils.isValidEmail(email)) {
 				throw new ResponseStatusException(
 						HttpStatus.BAD_REQUEST, EMAIL_IS_NOT_VALID_ERROR);
 			}

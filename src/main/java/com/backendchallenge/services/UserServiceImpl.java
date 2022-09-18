@@ -1,5 +1,6 @@
 package com.backendchallenge.services;
 
+import com.backendchallenge.customException.AlreadyExistsException;
 import com.backendchallenge.dtos.UserRequestDTO;
 import com.backendchallenge.dtos.UserResponseDTO;
 import com.backendchallenge.entities.UserEntity;
@@ -24,8 +25,13 @@ public class UserServiceImpl implements IUserService {
     UserRepository userRepository;
 
     @Override
-    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
+    public UserResponseDTO createUser(UserRequestDTO userRequestDTO) throws AlreadyExistsException {
         log.info("Creating user {}", StringUtils.obfuscateEmailAddress(userRequestDTO.getEmailAddress()));
+
+        UserEntity userExists = userRepository.findByEmailAddress(userRequestDTO.getEmailAddress());
+        if (userExists != null) {
+            throw new AlreadyExistsException(String.format("User with {} email already Exists!", userRequestDTO.getEmailAddress()));
+        }
 
         UserEntity entity = UserMapper.MAPPER.toEntity(userRequestDTO);
         entity.setId(UUID.randomUUID().toString());

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -25,11 +26,12 @@ public class UserServiceImpl implements IUserService {
     public UserResponseDTO createUser(UserRequestDTO userRequestDTO) {
         log.info("Creating user {}", StringUtils.obfuscateEmailAddress(userRequestDTO.getEmailAddress()));
 
-        UserEntity entity = UserEntity.toEntity(userRequestDTO);
+        UserEntity entity = UserMapper.MAPPER.toEntity(userRequestDTO);
+        entity.setId(UUID.randomUUID().toString());
         UserEntity responseEntity = userRepository.save(entity);
 
         log.info("Created user {}", StringUtils.obfuscateEmailAddress(userRequestDTO.getEmailAddress()));
-        return UserResponseDTO.toDto(responseEntity);
+        return UserMapper.MAPPER.toResponseDTO(responseEntity);
 
     }
 
@@ -45,11 +47,12 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public List<UserResponseDTO> getUsers() {
-        log.info("Getting user information for ");
+        log.info("Getting all users");
 
         List<UserEntity> allUsers = userRepository.getAllUsers();
 
-        log.info("Got user information for");
-        return allUsers.isEmpty() ? Collections.emptyList() : allUsers.stream().map(UserResponseDTO::toDto).collect(Collectors.toList());
+        log.info("Got all users");
+        return allUsers.isEmpty() ? Collections.emptyList() : allUsers.stream()
+                .map(UserMapper.MAPPER::toResponseDTO).collect(Collectors.toList());
     }
 }

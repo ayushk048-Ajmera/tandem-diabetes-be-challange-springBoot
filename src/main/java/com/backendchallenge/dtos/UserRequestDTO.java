@@ -1,25 +1,27 @@
 package com.backendchallenge.dtos;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 @Data
+@RequiredArgsConstructor
 public class UserRequestDTO {
-	@NotNull
+	@NotBlank
 	private String firstName;
 
-	@NotNull
+	@NotBlank
 	private String middleName;
 
-	@NotNull
+	@NotBlank
 	private String lastName;
 
-	@NotNull
+	@NotBlank
 	private String phoneNumber;
 
-	@NotNull
+	@NotBlank
 	@Email
 	private String emailAddress;
 }

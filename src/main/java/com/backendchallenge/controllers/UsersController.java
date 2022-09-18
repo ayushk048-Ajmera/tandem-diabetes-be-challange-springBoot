@@ -6,7 +6,6 @@ import com.backendchallenge.services.IUserService;
 import com.backendchallenge.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Valid
@@ -29,7 +27,6 @@ public class UsersController {
 
 	@Autowired
 	IUserService userService;
-
 
 	@PostMapping
 	public ResponseEntity<UserResponseDTO> createUser(@Valid @RequestBody UserRequestDTO user) throws Exception {
@@ -42,17 +39,19 @@ public class UsersController {
 	}
 
 	@GetMapping
-	public ResponseEntity<List<UserResponseDTO>> getUsers(@RequestParam(required = false) String email) {
+	public ResponseEntity getUsers(@RequestParam(required = false) String email) {
 		log.info("Getting user information for ");
 
-		if(org.apache.commons.lang3.StringUtils.isEmpty(email)) {
-			HttpHeaders responseHeaders = new HttpHeaders();
-			responseHeaders.add("ContentType", "application/json");
+		if (org.apache.commons.lang3.StringUtils.isEmpty(email)) {
 			List<UserResponseDTO> users = userService.getUsers();
-			return new ResponseEntity<>(users, responseHeaders, HttpStatus.OK);
+			return ResponseEntity.ok(users);
 		} else {
 			UserResponseDTO user = userService.getUser(email);
-			return ResponseEntity.ok(Collections.singletonList(user));
+			if (user == null) {
+				throw new ResponseStatusException(
+						HttpStatus.NOT_FOUND, "User not found");
+			}
+			return ResponseEntity.ok(user);
 		}
 	}
 }
